@@ -475,6 +475,27 @@ namespace UniGetUI.Interface
             BackgroundText.Visibility = Packages.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             MainApp.Instance.MainWindow.NavigationPage.BundleBadge.Value = Packages.Count;
             MainApp.Instance.MainWindow.NavigationPage.BundleBadge.Visibility = Packages.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            if (FilteredPackages.Count() == 0)
+            {
+                    if (Packages.Count() == 0)
+                    {
+                        BackgroundText.Text = SourcesPlaceholderText.Text = CoreTools.AutoTranslated("We couldn't find any package");
+                        SourcesPlaceholderText.Text = CoreTools.AutoTranslated("No packages found");
+                        MainSubtitle.Text = CoreTools.AutoTranslated("No packages found");
+                    }
+                    else
+                    {
+                        BackgroundText.Text = CoreTools.AutoTranslated("No results were found matching the input criteria");
+                        SourcesPlaceholderText.Text = CoreTools.AutoTranslated("No packages were found");
+                        MainSubtitle.Text = CoreTools.Translate("{0} packages were found, {1} of which match the specified filters.", Packages.Count, FilteredPackages.Count);
+                    }
+                    BackgroundText.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                BackgroundText.Visibility = Visibility.Collapsed;
+                MainSubtitle.Text = CoreTools.Translate("{0} packages were found, {1} of which match the specified filters.", Packages.Count, FilteredPackages.Count);
+            }
         }
 
         public void GenerateToolBar()
@@ -748,9 +769,7 @@ namespace UniGetUI.Interface
         {
             Packages.Add(package);
             AddPackageToSourcesList(package.Package);
-            BackgroundText.Visibility = Packages.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
-            MainApp.Instance.MainWindow.NavigationPage.BundleBadge.Value = Packages.Count;
-            MainApp.Instance.MainWindow.NavigationPage.BundleBadge.Visibility = Packages.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+            UpdateCount();
             FilterPackages(QueryBlock.Text.Trim());
         }
 
